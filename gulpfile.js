@@ -1,6 +1,8 @@
 var gulp = require('gulp');
 var minify = require('gulp-minify');
 var modConcat = require("module-concat");
+var ncp = require('ncp').ncp;
+var colors = require('colors');
 
 var outputFile = "./build/new-episode.js";
 
@@ -13,8 +15,14 @@ gulp.task('build', function(){
       .pipe(minify())
       .pipe(gulp.dest('build'));
 
-    gulp.src('./src/episode-template')
-      .pipe(gulp.dest('./build'));
+      // Copy template folder
+      ncp('./src/episode-template', './build/episode-template', function (err) {
+        if (err) {
+          return console.error(err);
+        } else {
+          console.log('Done.'.green);
+        }
+      });
 
     console.log(stats.files.length + " were combined into " + outputFile);
   });
